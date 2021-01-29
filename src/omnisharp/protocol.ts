@@ -34,6 +34,7 @@ export module Requests {
     export const QuickInfo = '/quickinfo';
     export const Completion = '/completion';
     export const CompletionResolve = '/completion/resolve';
+    export const CancelRequest = '/cancelRequest';
 }
 
 export namespace WireProtocol {
@@ -60,6 +61,10 @@ export namespace WireProtocol {
         Event: string;
         Body: any;
     }
+}
+
+export interface CancellationRequest {
+    Request_seq: number;
 }
 
 export interface FileBasedRequest {

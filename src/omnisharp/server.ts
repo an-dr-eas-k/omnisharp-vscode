@@ -32,6 +32,7 @@ import Disposable from '../Disposable';
 import OptionProvider from '../observers/OptionProvider';
 import { IMonoResolver } from '../constants/IMonoResolver';
 import { removeBOMFromBuffer, removeBOMFromString } from '../utils/removeBOM';
+import { CancellationRequest } from './protocol';
 
 enum ServerState {
     Starting,
@@ -576,6 +577,10 @@ export class OmniSharpServer {
                 this._requestQueue.cancelRequest(request);
                 // Note: This calls reject() on the promise returned by OmniSharpServer.makeRequest
                 request.onError(new Error(`Request ${request.command} cancelled, id: ${request.id}`));
+                if (request.id) {
+                    const cancelRequest: CancellationRequest = { Request_seq: request.id };
+                    this._makeRequest({ command: protocol.Requests.CancelRequest, data: cancelRequest, onSuccess: null, onError: null });
+                }
             });
         }
 
